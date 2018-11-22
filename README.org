@@ -2,6 +2,8 @@
 #+DATE: [2018-11-22 Thu]
 #+AUTHOR: Philipp Uhl
 
+A python script for sending desktop notifications from the shell.
+
 * About
 
 Libnotify is part of many scripts in the Linux world. It utilizes many
