@@ -102,3 +102,7 @@ With =notify-send.sh= like this:
 #!/bin/bash
 notify-send.py "$@" &
 #+END_SRC
+
+* See also
+
+Also take a look at my [[https://github.com/phuhl/linux_notification_center][notification-daemon]] inspired by [[https://wiki.archlinux.org/index.php/Dunst][Dunst]], but with several improvements, including the possibility of a transparent background and a notification center that stores notifications.
