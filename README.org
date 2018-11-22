@@ -8,8 +8,8 @@ Libnotify is part of many scripts in the Linux world. It utilizes many
 of the specified features of the Desktop Notifications Specification
 and makes them accessible to shell-scripts. It does *not* however
 allow to replace an existing notification with the =replaces-id=. This
-is a known [[https://bugs.launchpad.net/ubuntu/+source/libnotify/+bug/257135][bug]] since 2008 and has a [[https://bugs.launchpad.net/ubuntu/+source/libnotify/+bug/257135/comments/10][patch]] since 2012. The patch is not
-upstream though.
+is a known [[https://bugs.launchpad.net/ubuntu/+source/libnotify/+bug/257135][bug]] since 2008 and has a [[https://bugs.launchpad.net/ubuntu/+source/libnotify/+bug/257135/comments/10][patch]] since 2012. The patch is still not
+upstream though (2018).
 
 This python script utilizes the =notify2= package and exposes the
 functionality to the shell.
@@ -95,7 +95,7 @@ fi
 
 
 
-#+CAPTION: notify-send.sh
+With =notify-send.sh= like this:
 #+BEGIN_SRC sh
 #!/bin/bash
 notify-send.py "$@" &
