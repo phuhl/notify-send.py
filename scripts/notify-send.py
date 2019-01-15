@@ -23,9 +23,9 @@ parser.add_argument(
     '-c', '--category', metavar='TYPE[,TYPE...]',
     help='Specifies the notification category.')
 parser.add_argument(
-    '--hint', metavar='TYPE:NAME:VALUE',
+    '--hint', metavar='TYPE:NAME:VALUE[ TYPE:NAME:VALUE...]', nargs='*',
     help=('Specifies basic extra data to pass. Valid types'
-          'are int, double, string and byte.'))
+          ' are int, double, string, boolean and byte.'))
 parser.add_argument(
     '-r', '--replaces-id', metavar='ID',
     help='Specifies the id of the notification that should be replaced.')
@@ -38,12 +38,11 @@ parser.add_argument('SUMMERY')
 parser.add_argument('BODY', nargs='?')
 
 args = parser.parse_args()
-
 urgency = args.urgency
 expirey = args.expire_time
 appName = args.app_name
 category = args.category
-hint = args.hint
+hints = args.hint
 replacesProcess = args.replaces_process
 replacesId = args.replaces_id
 icon = args.icon
@@ -81,24 +80,27 @@ if expirey:
 if category:
     n.set_category(category)
 
-if hint:
-    try:
-        [type, key, value] = hint.split(':')
-        if type == "boolean" and (value == "True") or (value == "true"):
-            n.set_hint(key, True)
-        else:
-            if type == "boolean" and (value == "False") or (value == "false"):
-                n.set_hint(key, False)
+if hints:
+    for hint in hints:
+        try:
+            [type, key, value] = hint.split(':')
+            if type == "boolean":
+                if (value == "True") or (value == "true"):
+                    n.set_hint(key, True)
+                elif (value == "False") or (value == "false"):
+                    n.set_hint(key, False)
+                else:
+                    print("valid types for boolean are: True|true|False|false")
+                    exit()
+            elif type == "int":
+                n.set_hint(key, int(value))
+            elif type == "byte":
+                n.set_hint_byte(key, int(value))
             else:
-                print("valid types for boolean are: True|true|False|false")
-                exit()
-        if type == "int":
-            n.set_hint(key, int(value))
-        if type == "byte":
-            n.set_hint_byte(key, int(value))
-    except ValueError:
-        print("hint has to be in the format TYPE:KEY:VALUE")
-        exit()
+                print("Valid types are int, double, string, boolean and byte")
+        except ValueError:
+            print("hint has to be in the format TYPE:KEY:VALUE")
+            exit()
 
 if replacesId is not None:
     try:
