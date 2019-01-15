@@ -34,8 +34,12 @@ parser.add_argument(
     help=('Specifies the name of a notification.'
           ' Every notification that gets created with the same NAME will'
           ' replace every notification before it with the same NAME.'))
-parser.add_argument('SUMMERY')
-parser.add_argument('BODY', nargs='?')
+parser.add_argument(
+    'SUMMERY',
+    help=('Summery of the notification. Usage of \\n and \\t is possible.'))
+parser.add_argument(
+    'BODY', nargs='?',
+    help=('Body of the notification. Usage of \\n and \\t is possible.'))
 
 args = parser.parse_args()
 urgency = args.urgency
@@ -47,8 +51,13 @@ replacesProcess = args.replaces_process
 replacesId = args.replaces_id
 icon = args.icon
 
-summery = args.SUMMERY
-body = args.BODY
+
+def cleanUpText(text):
+    return text.replace("\\n", "\n").replace("\\t", "\t")
+
+
+summery = cleanUpText(args.SUMMERY or "")
+body = cleanUpText(args.BODY or "")
 
 notify2.init(appName or "")
 if icon and body:
