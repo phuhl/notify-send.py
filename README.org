@@ -84,7 +84,7 @@ optional arguments:
 In order to display notifications, even if libnotify or
 =notify-send.py= is used from the root user this script is helpful.
 You need to customize it with your username and userid (which probably is 
-1000 but can be found out by running `cat /etc/passwd | grep <username>`).
+1000 but can be found out by running ~cat /etc/passwd | grep <username>~).
 
 #+CAPTION: notify-send-from-root.sh
 #+BEGIN_SRC sh
