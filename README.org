@@ -82,26 +82,27 @@ optional arguments:
 * notify-send[.py] as root user
 
 In order to display notifications, even if libnotify or
-=notify-send.py= is used from the root user these two scripts are helpful.
+=notify-send.py= is used from the root user this script is helpful.
+You need to customize it with your username and userid (which probably is 
+1000 but can be found out by running `cat /etc/passwd | grep <username>`).
 
 #+CAPTION: notify-send-from-root.sh
 #+BEGIN_SRC sh
 #!/bin/bash
-username=<your username here>
-if [ "$(id -u)" != "1000" ] ; then
-    sudo -u $username DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send.sh "$@"
+USERNAME=<your username here>
+USERID=1000
+
+export XAUTHORITY=/home/$USERNAME/.Xauthority
+export DISPLAY=:0
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$USERID/bus
+
+if [ "$(/usr/bin/id -u)" != "$USERID" ] ; then
+    sudo -u $USERNAME XAUTHORITY=/home/$USERNAME/.Xauthority DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$USERID/bus /usr/bin/notify-send.py "$@"
 else
-    notify-send.sh "$@"
+    /usr/bin/notify-send.py "$@"
 fi
 #+END_SRC
 
-
-
-With =notify-send.sh= like this:
-#+BEGIN_SRC sh
-#!/bin/bash
-notify-send.py "$@" &
-#+END_SRC
 
 * See also
 
