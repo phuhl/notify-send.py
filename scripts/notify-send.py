@@ -50,12 +50,12 @@ parser.add_argument(
 args = parser.parse_args()
 urgency = args.urgency
 expirey = args.expire_time
-appName = args.app_name
+app_name = args.app_name
 category = args.category
 hints = args.hint
 actions = args.action
-replacesProcess = args.replaces_process
-replacesId = args.replaces_id
+replaces_process = args.replaces_process
+replaces_id = args.replaces_id
 icon = args.icon
 
 
@@ -71,7 +71,7 @@ from gi.repository import GLib
 global loop
 loop = GLib.MainLoop()
 
-notify2.init(appName or "", 'glib')
+notify2.init(app_name or "", 'glib')
 if icon and body:
     n = notify2.Notification(summary, message=body, icon=icon)
 elif icon:
@@ -129,9 +129,9 @@ if hints:
             exit()
 
 
-if replacesId is not None:
+if replaces_id is not None:
     try:
-        n.id = int(replacesId)
+        n.id = int(replaces_id)
     except ValueError:
         print("replaces-id has to be an integer")
         exit()
@@ -152,28 +152,28 @@ if actions:
         [key, value] = action.split(':')
         n.add_action(key, value, action)
 
-if replacesProcess:
+if replaces_process:
     # address = ('localhost', 6000)
     try:
         with open('/tmp/notify-send.py.address', 'r') as pidf:
             conn = Client(pidf.read())
-            conn.send([n, replacesProcess])
+            conn.send([n, replaces_process])
             conn.close()
     except:
         listener = Listener()
         with open('/tmp/notify-send.py.address', 'w') as pidf:
             pidf.write(listener.address)
-        replacesProcesses = {}
+        replaces_processes = {}
         n.show()
-        replacesProcesses[replacesProcess] = n.id
+        replaces_processes[replaces_process] = n.id
         # stuff
         while True:
             conn = listener.accept()
-            [n, replacesProcess] = conn.recv()
-            if replacesProcess in replacesProcesses:
-                n.id = replacesProcesses[replacesProcess]
+            [n, replaces_process] = conn.recv()
+            if replaces_process in replaces_processes:
+                n.id = replaces_processes[replaces_process]
             n.show()
-            replacesProcesses[replacesProcess] = n.id
+            replaces_processes[replaces_process] = n.id
             conn.close()
 else:
     n.show()
