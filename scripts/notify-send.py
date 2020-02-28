@@ -4,7 +4,6 @@ import argparse
 from multiprocessing.connection import Client, Listener
 
 import notify2
-from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
 
 
