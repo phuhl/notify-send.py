@@ -35,11 +35,17 @@ parser.add_argument(
           ' Every notification that gets created with the same NAME will'
           ' replace every notification before it with the same NAME.'))
 parser.add_argument(
+    '--action', metavar='KEY:NAME[ KEY:NAME...]', nargs='*',
+    help=('Specifies actions for the notification. The action with the key'
+          ' "default" will be dispatched on click of the notification.'
+          ' Key is the return value, name is the display-name on the button.'))
+parser.add_argument(
     'SUMMERY',
     help=('Summery of the notification. Usage of \\n and \\t is possible.'))
 parser.add_argument(
     'BODY', nargs='?',
     help=('Body of the notification. Usage of \\n and \\t is possible.'))
+
 
 args = parser.parse_args()
 urgency = args.urgency
@@ -47,6 +53,7 @@ expirey = args.expire_time
 appName = args.app_name
 category = args.category
 hints = args.hint
+actions = args.action
 replacesProcess = args.replaces_process
 replacesId = args.replaces_id
 icon = args.icon
@@ -59,7 +66,12 @@ def cleanUpText(text):
 summery = cleanUpText(args.SUMMERY or "")
 body = cleanUpText(args.BODY or "")
 
-notify2.init(appName or "")
+from dbus.mainloop.glib import DBusGMainLoop
+from gi.repository import GLib
+global loop
+loop = GLib.MainLoop()
+
+notify2.init(appName or "", 'glib')
 if icon and body:
     n = notify2.Notification(summery, message=body, icon=icon)
 elif icon:
@@ -92,24 +104,30 @@ if category:
 if hints:
     for hint in hints:
         try:
-            [type, key, value] = hint.split(':')
+            hintparts = hint.split(':')
+            type = hintparts[0]
+            key = hintparts[1]
+            value = ':'.join(hintparts[2:])
+
             if type == "boolean":
                 if (value == "True") or (value == "true"):
                     n.set_hint(key, True)
-                elif (value == "False") or (value == "false"):
-                    n.set_hint(key, False)
                 else:
-                    print("valid types for boolean are: True|true|False|false")
-                    exit()
-            elif type == "int":
+                    if (value == "False") or (value == "false"):
+                        n.set_hint(key, False)
+                    else:
+                        print("valid types for boolean are: True|true|False|false")
+                        exit()
+            if type == "int":
                 n.set_hint(key, int(value))
-            elif type == "byte":
+            if type == "string":
+                n.set_hint(key, value)
+            if type == "byte":
                 n.set_hint_byte(key, int(value))
-            else:
-                print("Valid types are int, double, string, boolean and byte")
         except ValueError:
             print("hint has to be in the format TYPE:KEY:VALUE")
             exit()
+
 
 if replacesId is not None:
     try:
@@ -117,6 +135,22 @@ if replacesId is not None:
     except ValueError:
         print("replaces-id has to be an integer")
         exit()
+
+def Action(n, text):
+    print(text)
+    global loop
+    loop.quit()
+
+def Close(n):
+    print('closed')
+    global loop
+    loop.quit()
+
+if actions:
+    n.connect("closed", Close)
+    for action in actions:
+        [key, value] = action.split(':')
+        n.add_action(key, value, Action)
 
 if replacesProcess:
     # address = ('localhost', 6000)
@@ -144,3 +178,5 @@ if replacesProcess:
 else:
     n.show()
     print(n.id)
+    if actions:
+        loop.run()
