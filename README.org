@@ -29,6 +29,8 @@ functionality to the shell.
   every notification before it with the same NAME. If called with this
   parameter =notify-send.py= might block, best to be called with a
   trailing =&=.
+- =notify-send.py -h= has action-support (buttons). Try
+  =notify-send.py "Yes or no?" --action ok:OK cancel:Cancel=
 
 * Installation
 
@@ -47,61 +49,74 @@ sudo python setup.py install
 >$ notify-send.py -h
 usage: notify-send.py [-h] [-u LEVEL] [-t TIME] [-a APP_NAME]
                       [-i ICON[,ICON...]] [-c TYPE[,TYPE...]]
-                      [--hint TYPE:NAME:VALUE] [-r ID]
-                      [--replaces-process NAME]
+                      [--hint [TYPE:NAME:VALUE [TYPE:NAME:VALUE ...]]]
+                      [-r ID] [--replaces-process NAME]
+                      [--action [KEY:NAME [KEY:NAME ...]]]
                       SUMMERY [BODY]
 
 positional arguments:
-  SUMMERY
-  BODY
+  SUMMERY               Summery of the notification. Usage of \n and \t
+                        is possible.
+  BODY                  Body of the notification. Usage of \n and \t is
+                        possible.
 
 optional arguments:
   -h, --help            show this help message and exit
   -u LEVEL, --urgency LEVEL
-                        Specifies the urgency level (low, normal, critical).
+                        Specifies the urgency level (low, normal,
+                        critical).
   -t TIME, --expire-time TIME
-                        Specifies the timeout in milliseconds at which to
-                        expire the notification.
+                        Specifies the timeout in milliseconds at which
+                        to expire the notification.
   -a APP_NAME, --app-name APP_NAME
                         Specifies the app name for the icon
   -i ICON[,ICON...], --icon ICON[,ICON...]
-                        Specifies an icon filename or stock icon to display.
+                        Specifies an icon filename or stock icon to
+                        display.
   -c TYPE[,TYPE...], --category TYPE[,TYPE...]
                         Specifies the notification category.
-  --hint TYPE:NAME:VALUE
-                        Specifies basic extra data to pass. Valid typesare
-                        int, double, string and byte.
+  --hint [TYPE:NAME:VALUE [TYPE:NAME:VALUE ...]]
+                        Specifies basic extra data to pass. Valid types
+                        are int, double, string, boolean and byte.
   -r ID, --replaces-id ID
-                        Specifies the id of the notification that should be
-                        replaced.
+                        Specifies the id of the notification that should
+                        be replaced.
   --replaces-process NAME
-                        Specifies the name of a process that should take care
-                        of replacing notifications for this process.
+                        Specifies the name of a notification. Every
+                        notification that gets created with the same
+                        NAME will replace every notification before it
+                        with the same NAME.
+  --action [KEY:NAME [KEY:NAME ...]]
+                        Specifies actions for the notification. The
+                        action with the key "default" will be dispatched
+                        on click of the notification. Key is the return
+                        value, name is the display-name on the button.
 #+END_EXAMPLE
 
 * notify-send[.py] as root user
 
 In order to display notifications, even if libnotify or
-=notify-send.py= is used from the root user these two scripts are helpful.
+=notify-send.py= is used from the root user this script is helpful.
+You need to customize it with your username and userid (which probably is 
+1000 but can be found out by running ~cat /etc/passwd | grep <username>~).
 
 #+CAPTION: notify-send-from-root.sh
 #+BEGIN_SRC sh
 #!/bin/bash
-username=<your username here>
-if [ "$(id -u)" != "1000" ] ; then
-    sudo -u $username DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus notify-send.sh "$@"
+USERNAME=<your username here>
+USERID=1000
+
+export XAUTHORITY=/home/$USERNAME/.Xauthority
+export DISPLAY=:0
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$USERID/bus
+
+if [ "$(/usr/bin/id -u)" != "$USERID" ] ; then
+    sudo -u $USERNAME XAUTHORITY=/home/$USERNAME/.Xauthority DISPLAY=:0 DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$USERID/bus /usr/bin/notify-send.py "$@"
 else
-    notify-send.sh "$@"
+    /usr/bin/notify-send.py "$@"
 fi
 #+END_SRC
 
-
-
-With =notify-send.sh= like this:
-#+BEGIN_SRC sh
-#!/bin/bash
-notify-send.py "$@" &
-#+END_SRC
 
 * See also
 

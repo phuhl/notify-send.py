@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 import notify2
 import argparse
@@ -23,9 +23,9 @@ parser.add_argument(
     '-c', '--category', metavar='TYPE[,TYPE...]',
     help='Specifies the notification category.')
 parser.add_argument(
-    '--hint', metavar='TYPE:NAME:VALUE',
+    '--hint', metavar='TYPE:NAME:VALUE', nargs='*',
     help=('Specifies basic extra data to pass. Valid types'
-          'are int, double, string and byte.'))
+          ' are int, double, string, boolean and byte.'))
 parser.add_argument(
     '-r', '--replaces-id', metavar='ID',
     help='Specifies the id of the notification that should be replaced.')
@@ -34,24 +34,44 @@ parser.add_argument(
     help=('Specifies the name of a notification.'
           ' Every notification that gets created with the same NAME will'
           ' replace every notification before it with the same NAME.'))
-parser.add_argument('SUMMERY')
-parser.add_argument('BODY', nargs='?')
+parser.add_argument(
+    '--action', metavar='KEY:NAME', nargs='*',
+    help=('Specifies actions for the notification. The action with the key'
+          ' "default" will be dispatched on click of the notification.'
+          ' Key is the return value, name is the display-name on the button.'))
+parser.add_argument(
+    'SUMMERY',
+    help=('Summery of the notification. Usage of \\n and \\t is possible.'))
+parser.add_argument(
+    'BODY', nargs='?',
+    help=('Body of the notification. Usage of \\n and \\t is possible.'))
+
 
 args = parser.parse_args()
-
 urgency = args.urgency
 expirey = args.expire_time
 appName = args.app_name
 category = args.category
-hint = args.hint
+hints = args.hint
+actions = args.action
 replacesProcess = args.replaces_process
 replacesId = args.replaces_id
 icon = args.icon
 
-summery = args.SUMMERY
-body = args.BODY
 
-notify2.init(appName or "")
+def cleanUpText(text):
+    return text.replace("\\n", "\n").replace("\\t", "\t")
+
+
+summery = cleanUpText(args.SUMMERY or "")
+body = cleanUpText(args.BODY or "")
+
+from dbus.mainloop.glib import DBusGMainLoop
+from gi.repository import GLib
+global loop
+loop = GLib.MainLoop()
+
+notify2.init(appName or "", 'glib')
 if icon and body:
     n = notify2.Notification(summery, message=body, icon=icon)
 elif icon:
@@ -81,24 +101,33 @@ if expirey:
 if category:
     n.set_category(category)
 
-if hint:
-    try:
-        [type, key, value] = hint.split(':')
-        if type == "boolean" and (value == "True") or (value == "true"):
-            n.set_hint(key, True)
-        else:
-            if type == "boolean" and (value == "False") or (value == "false"):
-                n.set_hint(key, False)
-            else:
-                print("valid types for boolean are: True|true|False|false")
-                exit()
-        if type == "int":
-            n.set_hint(key, int(value))
-        if type == "byte":
-            n.set_hint_byte(key, int(value))
-    except ValueError:
-        print("hint has to be in the format TYPE:KEY:VALUE")
-        exit()
+if hints:
+    for hint in hints:
+        try:
+            hintparts = hint.split(':')
+            type = hintparts[0]
+            key = hintparts[1]
+            value = ':'.join(hintparts[2:])
+
+            if type == "boolean":
+                if (value == "True") or (value == "true"):
+                    n.set_hint(key, True)
+                else:
+                    if (value == "False") or (value == "false"):
+                        n.set_hint(key, False)
+                    else:
+                        print("valid types for boolean are: True|true|False|false")
+                        exit()
+            if type == "int":
+                n.set_hint(key, int(value))
+            if type == "string":
+                n.set_hint(key, value)
+            if type == "byte":
+                n.set_hint_byte(key, int(value))
+        except ValueError:
+            print("hint has to be in the format TYPE:KEY:VALUE")
+            exit()
+
 
 if replacesId is not None:
     try:
@@ -106,6 +135,22 @@ if replacesId is not None:
     except ValueError:
         print("replaces-id has to be an integer")
         exit()
+
+def Action(n, text):
+    print(text)
+    global loop
+    loop.quit()
+
+def Close(n):
+    print('closed')
+    global loop
+    loop.quit()
+
+if actions:
+    n.connect("closed", Close)
+    for action in actions:
+        [key, value] = action.split(':')
+        n.add_action(key, value, Action)
 
 if replacesProcess:
     # address = ('localhost', 6000)
@@ -133,3 +178,5 @@ if replacesProcess:
 else:
     n.show()
     print(n.id)
+    if actions:
+        loop.run()
