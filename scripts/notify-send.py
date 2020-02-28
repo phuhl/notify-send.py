@@ -75,7 +75,7 @@ notify2.init(appName or "", 'glib')
 if icon and body:
     n = notify2.Notification(summery, message=body, icon=icon)
 elif icon:
-        n = notify2.Notification(summery, icon=icon)
+    n = notify2.Notification(summery, icon=icon)
 elif body:
     n = notify2.Notification(summery, message=body)
 else:
