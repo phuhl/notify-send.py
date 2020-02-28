@@ -61,7 +61,6 @@ class NotifySend:
             'BODY', nargs='?',
             help=('Body of the notification. Usage of \\n and \\t is possible.'))
 
-
         args = parser.parse_args()
         urgency = args.urgency
         expirey = args.expire_time
@@ -136,7 +135,6 @@ class NotifySend:
                     print("hint has to be in the format TYPE:KEY:VALUE")
                     exit()
 
-
         if replaces_id is not None:
             try:
                 n.id = int(replaces_id)
@@ -157,7 +155,7 @@ class NotifySend:
                     conn = Client(pidf.read())
                     conn.send([n, replaces_process])
                     conn.close()
-            except:
+            except Exception:
                 listener = Listener()
                 with open('/tmp/notify-send.py.address', 'w') as pidf:
                     pidf.write(listener.address)
