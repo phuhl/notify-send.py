@@ -59,12 +59,12 @@ replacesId = args.replaces_id
 icon = args.icon
 
 
-def cleanUpText(text):
+def clean_up_text(text):
     return text.replace("\\n", "\n").replace("\\t", "\t")
 
 
-summary = cleanUpText(args.SUMMARY or "")
-body = cleanUpText(args.BODY or "")
+summary = clean_up_text(args.SUMMARY or "")
+body = clean_up_text(args.BODY or "")
 
 from dbus.mainloop.glib import DBusGMainLoop
 from gi.repository import GLib
@@ -136,21 +136,21 @@ if replacesId is not None:
         print("replaces-id has to be an integer")
         exit()
 
-def Action(n, text):
+def action(n, text):
     print(text)
     global loop
     loop.quit()
 
-def Close(n):
+def close(n):
     print('closed')
     global loop
     loop.quit()
 
 if actions:
-    n.connect("closed", Close)
+    n.connect("closed", close)
     for action in actions:
         [key, value] = action.split(':')
-        n.add_action(key, value, Action)
+        n.add_action(key, value, action)
 
 if replacesProcess:
     # address = ('localhost', 6000)
