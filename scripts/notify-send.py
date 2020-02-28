@@ -40,8 +40,8 @@ parser.add_argument(
           ' "default" will be dispatched on click of the notification.'
           ' Key is the return value, name is the display-name on the button.'))
 parser.add_argument(
-    'SUMMERY',
-    help=('Summery of the notification. Usage of \\n and \\t is possible.'))
+    'SUMMARY',
+    help=('Summary of the notification. Usage of \\n and \\t is possible.'))
 parser.add_argument(
     'BODY', nargs='?',
     help=('Body of the notification. Usage of \\n and \\t is possible.'))
@@ -63,7 +63,7 @@ def cleanUpText(text):
     return text.replace("\\n", "\n").replace("\\t", "\t")
 
 
-summery = cleanUpText(args.SUMMERY or "")
+summary = cleanUpText(args.SUMMARY or "")
 body = cleanUpText(args.BODY or "")
 
 from dbus.mainloop.glib import DBusGMainLoop
@@ -73,13 +73,13 @@ loop = GLib.MainLoop()
 
 notify2.init(appName or "", 'glib')
 if icon and body:
-    n = notify2.Notification(summery, message=body, icon=icon)
+    n = notify2.Notification(summary, message=body, icon=icon)
 elif icon:
-    n = notify2.Notification(summery, icon=icon)
+    n = notify2.Notification(summary, icon=icon)
 elif body:
-    n = notify2.Notification(summery, message=body)
+    n = notify2.Notification(summary, message=body)
 else:
-    n = notify2.Notification(summery)
+    n = notify2.Notification(summary)
 
 if urgency == "low":
     n.set_urgency(notify2.URGENCY_LOW)
