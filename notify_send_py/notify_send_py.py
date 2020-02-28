@@ -11,7 +11,7 @@ def clean_up_text(text):
     return text.replace("\\n", "\n").replace("\\t", "\t")
 
 
-class NotifySend:
+class NotifySendPy:
     def __init__(self, loop=None):
         self.loop = loop or GLib.MainLoop()
 
@@ -19,61 +19,20 @@ class NotifySend:
         print('closed')
         self.loop.quit()
 
-    def main(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument(
-            '-u', '--urgency', metavar='LEVEL',
-            help='Specifies the urgency level (low, normal, critical).')
-        parser.add_argument(
-            '-t', '--expire-time', metavar='TIME',
-            help=('Specifies the timeout in milliseconds at which'
-                  ' to expire the notification.'))
-        parser.add_argument(
-            '-a', '--app-name', metavar='APP_NAME',
-            help='Specifies the app name for the icon')
-        parser.add_argument(
-            '-i', '--icon', metavar='ICON[,ICON...]',
-            help='Specifies an icon filename or stock icon to display.')
-        parser.add_argument(
-            '-c', '--category', metavar='TYPE[,TYPE...]',
-            help='Specifies the notification category.')
-        parser.add_argument(
-            '--hint', metavar='TYPE:NAME:VALUE', nargs='*',
-            help=('Specifies basic extra data to pass. Valid types'
-                  ' are int, double, string, boolean and byte.'))
-        parser.add_argument(
-            '-r', '--replaces-id', metavar='ID',
-            help='Specifies the id of the notification that should be replaced.')
-        parser.add_argument(
-            '--replaces-process', metavar='NAME',
-            help=('Specifies the name of a notification.'
-                  ' Every notification that gets created with the same NAME will'
-                  ' replace every notification before it with the same NAME.'))
-        parser.add_argument(
-            '--action', metavar='KEY:NAME', nargs='*',
-            help=('Specifies actions for the notification. The action with the key'
-                  ' "default" will be dispatched on click of the notification.'
-                  ' Key is the return value, name is the display-name on the button.'))
-        parser.add_argument(
-            'SUMMARY',
-            help=('Summary of the notification. Usage of \\n and \\t is possible.'))
-        parser.add_argument(
-            'BODY', nargs='?',
-            help=('Body of the notification. Usage of \\n and \\t is possible.'))
-
-        args = parser.parse_args()
-        urgency = args.urgency
-        expirey = args.expire_time
-        app_name = args.app_name
-        category = args.category
-        hints = args.hint
-        actions = args.action
-        replaces_process = args.replaces_process
-        replaces_id = args.replaces_id
-        icon = args.icon
-
-        summary = clean_up_text(args.SUMMARY or "")
-        body = clean_up_text(args.BODY or "")
+    def notify(
+        self, summary, body=None, *,
+        actions=None,
+        app_name=None,
+        category=None,
+        expirey=None,
+        hints=None,
+        icon=None,
+        replaces_id=None,
+        replaces_process=None,
+        urgency=None,
+    ):
+        summary = clean_up_text(summary)
+        body = clean_up_text(body or "")
 
         notify2.init(app_name or "", 'glib')
         if icon and body:
@@ -175,5 +134,62 @@ class NotifySend:
                 self.loop.run()
 
 
+class NotifySendPyCLI:
+    def __init__(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument(
+            '-u', '--urgency', metavar='LEVEL',
+            help='Specifies the urgency level (low, normal, critical).')
+        parser.add_argument(
+            '-t', '--expire-time', metavar='TIME',
+            help=('Specifies the timeout in milliseconds at which'
+                  ' to expire the notification.'))
+        parser.add_argument(
+            '-a', '--app-name', metavar='APP_NAME',
+            help='Specifies the app name for the icon')
+        parser.add_argument(
+            '-i', '--icon', metavar='ICON[,ICON...]',
+            help='Specifies an icon filename or stock icon to display.')
+        parser.add_argument(
+            '-c', '--category', metavar='TYPE[,TYPE...]',
+            help='Specifies the notification category.')
+        parser.add_argument(
+            '--hint', metavar='TYPE:NAME:VALUE', nargs='*',
+            help=('Specifies basic extra data to pass. Valid types'
+                  ' are int, double, string, boolean and byte.'))
+        parser.add_argument(
+            '-r', '--replaces-id', metavar='ID',
+            help='Specifies the id of the notification that should be replaced.')
+        parser.add_argument(
+            '--replaces-process', metavar='NAME',
+            help=('Specifies the name of a notification.'
+                  ' Every notification that gets created with the same NAME will'
+                  ' replace every notification before it with the same NAME.'))
+        parser.add_argument(
+            '--action', metavar='KEY:NAME', nargs='*',
+            help=('Specifies actions for the notification. The action with the key'
+                  ' "default" will be dispatched on click of the notification.'
+                  ' Key is the return value, name is the display-name on the button.'))
+        parser.add_argument(
+            'SUMMARY',
+            help=('Summary of the notification. Usage of \\n and \\t is possible.'))
+        parser.add_argument(
+            'BODY', nargs='?',
+            help=('Body of the notification. Usage of \\n and \\t is possible.'))
+        args = parser.parse_args()
+        NotifySendPy().notify(
+            summary=args.SUMMARY, body=args.BODY,
+            actions=args.action,
+            app_name=args.app_name,
+            category=args.category,
+            expirey=args.expire_time,
+            hints=args.hint,
+            icon=args.icon,
+            replaces_id=args.replaces_id,
+            replaces_process=args.replaces_process,
+            urgency=args.urgency,
+        )
+
+
 if __name__ == '__main__':
-    NotifySend().main()
+    NotifySendPyCLI()
