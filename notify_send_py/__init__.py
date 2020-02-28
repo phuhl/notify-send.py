@@ -1,3 +1,3 @@
-"""A python script for sending desktop notifications from the shell."""
+"""Script and module for sending desktop notifications"""
 
-__version__ = '0.1.0'
+__version__ = '1.2.1'
