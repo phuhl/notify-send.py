@@ -75,9 +75,6 @@ class NotifySend:
         summary = clean_up_text(args.SUMMARY or "")
         body = clean_up_text(args.BODY or "")
 
-        global loop
-        loop = GLib.MainLoop()
-
         notify2.init(app_name or "", 'glib')
         if icon and body:
             n = notify2.Notification(summary, message=body, icon=icon)
@@ -175,7 +172,7 @@ class NotifySend:
             n.show()
             print(n.id)
             if actions:
-                loop.run()
+                self.loop.run()
 
 
 if __name__ == '__main__':
