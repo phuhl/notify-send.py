@@ -71,10 +71,10 @@ Usage
                          [--hint [TYPE:NAME:VALUE [TYPE:NAME:VALUE ...]]]
                          [-r ID] [--replaces-process NAME]
                          [--action [KEY:NAME [KEY:NAME ...]]]
-                         SUMMERY [BODY]
+                         SUMMARY [BODY]
 
    positional arguments:
-     SUMMERY               Summery of the notification. Usage of \n and \t
+     SUMMARY               Summary of the notification. Usage of \n and \t
                            is possible.
      BODY                  Body of the notification. Usage of \n and \t is
                            possible.
