@@ -68,11 +68,11 @@ class NotifySendPy:
             for hint in hints:
                 try:
                     hintparts = hint.split(':')
-                    type = hintparts[0]
+                    hint_type = hintparts[0]
                     key = hintparts[1]
                     value = ':'.join(hintparts[2:])
 
-                    if type == "boolean":
+                    if hint_type == "boolean":
                         if (value == "True") or (value == "true"):
                             n.set_hint(key, True)
                         else:
@@ -81,11 +81,11 @@ class NotifySendPy:
                             else:
                                 print("valid types for boolean are: True|true|False|false")
                                 exit()
-                    if type == "int":
+                    if hint_type == "int":
                         n.set_hint(key, int(value))
-                    if type == "string":
+                    if hint_type == "string":
                         n.set_hint(key, value)
-                    if type == "byte":
+                    if hint_type == "byte":
                         n.set_hint_byte(key, int(value))
                 except ValueError:
                     print("hint has to be in the format TYPE:KEY:VALUE")
