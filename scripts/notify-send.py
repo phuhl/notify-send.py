@@ -23,7 +23,7 @@ parser.add_argument(
     '-c', '--category', metavar='TYPE[,TYPE...]',
     help='Specifies the notification category.')
 parser.add_argument(
-    '--hint', metavar='TYPE:NAME:VALUE[ TYPE:NAME:VALUE...]', nargs='*',
+    '--hint', metavar='TYPE:NAME:VALUE', nargs='*',
     help=('Specifies basic extra data to pass. Valid types'
           ' are int, double, string, boolean and byte.'))
 parser.add_argument(
@@ -35,7 +35,7 @@ parser.add_argument(
           ' Every notification that gets created with the same NAME will'
           ' replace every notification before it with the same NAME.'))
 parser.add_argument(
-    '--action', metavar='KEY:NAME[ KEY:NAME...]', nargs='*',
+    '--action', metavar='KEY:NAME', nargs='*',
     help=('Specifies actions for the notification. The action with the key'
           ' "default" will be dispatched on click of the notification.'
           ' Key is the return value, name is the display-name on the button.'))
