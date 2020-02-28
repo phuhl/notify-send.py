@@ -117,6 +117,10 @@ else
 fi
 #+END_SRC
 
+* Examples (Volume and Brightness pop-ups)
+
+- Volume control-pop-ups: https://github.com/phuhl/linux_notification_center#example-volume-indicator
+- Brightness control-pop-ups: https://github.com/phuhl/linux_notification_center#example-brightness-indicator
 
 * See also
 
