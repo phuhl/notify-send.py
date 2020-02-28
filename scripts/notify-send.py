@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
-import notify2
 import argparse
-from multiprocessing.connection import Listener, Client
+from multiprocessing.connection import Client, Listener
+
+import notify2
+from dbus.mainloop.glib import DBusGMainLoop
+from gi.repository import GLib
 
 
 def clean_up_text(text):
@@ -78,8 +81,6 @@ def main():
     summary = clean_up_text(args.SUMMARY or "")
     body = clean_up_text(args.BODY or "")
 
-    from dbus.mainloop.glib import DBusGMainLoop
-    from gi.repository import GLib
     global loop
     loop = GLib.MainLoop()
 
