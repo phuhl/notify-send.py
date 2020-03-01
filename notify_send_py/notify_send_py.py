@@ -104,7 +104,7 @@ class NotifySendPy:
             n.connect("closed", self.close)
             for action in actions:
                 [key, value] = action.split(':')
-                n.add_action(key, value, action)
+                n.add_action(key, value, self.action)
 
         if replaces_process:
             # address = ('localhost', 6000)
