@@ -18,7 +18,9 @@ class NotifySendPy:
     def close(self, n):
         print('closed')
         self.loop.quit()
-
+    def action(self, n):
+        print(text)
+        self.loop.quit()
     def notify(
         self, summary, body=None, *,
         actions=None,
