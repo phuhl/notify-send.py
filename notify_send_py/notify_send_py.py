@@ -24,7 +24,10 @@ class NotifySendPy:
         self.loop.quit()
 
     def notify(
-        self, summary, body=None, *,
+        self,
+        summary,
+        body=None,
+        *,
         actions=None,
         app_name=None,
         category=None,
@@ -182,7 +185,8 @@ class NotifySendPyCLI:
             help=('Body of the notification. Usage of \\n and \\t is possible.'))
         args = parser.parse_args()
         NotifySendPy().notify(
-            summary=args.SUMMARY, body=args.BODY,
+            summary=args.SUMMARY,
+            body=args.BODY,
             actions=args.action,
             app_name=args.app_name,
             category=args.category,
@@ -195,5 +199,9 @@ class NotifySendPyCLI:
         )
 
 
-if __name__ == '__main__':
+def main():
     NotifySendPyCLI()
+
+
+if __name__ == '__main__':
+    main()
