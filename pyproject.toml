@@ -1,0 +1,19 @@
+[build-system]
+requires = ["flit_core >=2,<3"]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.metadata]
+module = "notify_send_py"
+dist-name = "notify-send.py"
+author = "Philipp Uhl"
+author-email = "git@ph-uhl.com"
+home-page = "https://github.com/phuhl/notify-send.py"
+description-file = "README.rst"
+classifiers = ["License :: OSI Approved :: MIT License"]
+requires = ["dbus-python", "notify2", "pygobject"]
+
+[tool.flit.metadata.requires-extra]
+dev = ["flit", "pygments"]
+
+[tool.flit.scripts]
+"notify-send.py" = "notify_send_py.notify_send_py:NotifySendPyCLI"
