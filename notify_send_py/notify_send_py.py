@@ -18,11 +18,16 @@ class NotifySendPy:
     def close(self, n):
         print('closed')
         self.loop.quit()
-    def action(self, n):
+
+    def action(self, n, text):
         print(text)
         self.loop.quit()
+
     def notify(
-        self, summary, body=None, *,
+        self,
+        summary,
+        body=None,
+        *,
         actions=None,
         app_name=None,
         category=None,
@@ -131,9 +136,9 @@ class NotifySendPy:
                     conn.close()
         else:
             n.show()
-            print(n.id)
             if actions:
                 self.loop.run()
+            return n.id
 
 
 class NotifySendPyCLI:
@@ -179,8 +184,9 @@ class NotifySendPyCLI:
             'BODY', nargs='?',
             help=('Body of the notification. Usage of \\n and \\t is possible.'))
         args = parser.parse_args()
-        NotifySendPy().notify(
-            summary=args.SUMMARY, body=args.BODY,
+        n_id = NotifySendPy().notify(
+            summary=args.SUMMARY,
+            body=args.BODY,
             actions=args.action,
             app_name=args.app_name,
             category=args.category,
@@ -191,7 +197,13 @@ class NotifySendPyCLI:
             replaces_process=args.replaces_process,
             urgency=args.urgency,
         )
+        if n_id is not None:
+            print(n_id)
+
+
+def main():
+    NotifySendPyCLI()
 
 
 if __name__ == '__main__':
-    NotifySendPyCLI()
+    main()
