@@ -35,7 +35,7 @@ Differences between notify-send.py and notify-send
    every notification before it with the same NAME. If called with this
    parameter ``notify-send.py`` might block, best to be called with a
    trailing ``&``.
--  ``notify-send.py -h`` has action-support (buttons). Try
+-  ``notify-send.py`` has action-support (buttons). Try
    ``notify-send.py "Yes or no?" --action ok:OK cancel:Cancel``
 
 Installation
