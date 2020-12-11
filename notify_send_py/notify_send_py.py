@@ -114,13 +114,13 @@ class NotifySendPy:
         if replaces_process:
             # address = ('localhost', 6000)
             try:
-                with open('/tmp/notify-send.py.address', 'r') as pidf:
+                with open('/tmp/notify-send.py.address', 'rb') as pidf:
                     conn = Client(pidf.read())
                     conn.send([n, replaces_process])
                     conn.close()
             except Exception:
                 listener = Listener()
-                with open('/tmp/notify-send.py.address', 'w') as pidf:
+                with open('/tmp/notify-send.py.address', 'wb') as pidf:
                     pidf.write(listener.address)
                 replaces_processes = {}
                 n.show()
