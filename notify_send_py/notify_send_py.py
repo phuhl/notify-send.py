@@ -21,7 +21,7 @@ class NotifySendPy:
 
     def action(self, n, text):
         print(text)
-        self.loop.quit()
+#        self.loop.quit()
 
     def notify(
         self,
