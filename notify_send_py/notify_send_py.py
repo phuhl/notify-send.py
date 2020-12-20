@@ -19,8 +19,11 @@ class NotifySendPy:
         print('closed')
         self.loop.quit()
 
-    def action(self, n, text):
-        print(text)
+    def action(self, n, text, maybe_params):
+        if maybe_params != None:
+            print(text + " " + str (maybe_params))
+        else:
+            print(text)
 #        self.loop.quit()
 
     def notify(

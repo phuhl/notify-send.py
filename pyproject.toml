@@ -10,7 +10,7 @@ author-email = "git@ph-uhl.com"
 home-page = "https://github.com/phuhl/notify-send.py"
 description-file = "README.rst"
 classifiers = ["License :: OSI Approved :: MIT License"]
-requires = ["dbus-python", "notify2", "pygobject"]
+requires = ["dbus-python", "pygobject"]
 
 [tool.flit.metadata.requires-extra]
 dev = ["flit", "pygments"]
