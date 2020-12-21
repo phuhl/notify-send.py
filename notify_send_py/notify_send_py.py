@@ -3,9 +3,10 @@
 import argparse
 from multiprocessing.connection import Client, Listener
 
-import notify2
+import notify3
 from gi.repository import GLib
 
+notify2 = notify3
 
 def clean_up_text(text):
     return text.replace("\\n", "\n").replace("\\t", "\t")
