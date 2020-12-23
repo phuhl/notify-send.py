@@ -3,8 +3,9 @@
 import argparse
 from multiprocessing.connection import Client, Listener
 
-from notify3 import notify3
 from gi.repository import GLib
+
+from .notify3 import notify3
 
 notify2 = notify3
 
