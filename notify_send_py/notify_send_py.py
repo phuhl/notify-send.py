@@ -26,7 +26,8 @@ class NotifySendPy:
             print(text + " " + str (maybe_params))
         else:
             print(text)
-#        self.loop.quit()
+        if not self.dontQuitOnAction:
+            self.loop.quit()
 
     def notify(
         self,
@@ -42,7 +43,9 @@ class NotifySendPy:
         replaces_id=None,
         replaces_process=None,
         urgency=None,
+        dontQuitOnAction=False
     ):
+        self.dontQuitOnAction = dontQuitOnAction
         summary = clean_up_text(summary)
         body = clean_up_text(body or "")
 
@@ -183,6 +186,10 @@ class NotifySendPyCLI:
                   ' "default" will be dispatched on click of the notification.'
                   ' Key is the return value, name is the display-name on the button.'))
         parser.add_argument(
+            '--dontQuitOnAction', action='store_true',
+            help=('Keeps running until the notification has been closed, instead'
+                  ' of stopping after the first action was received.'))
+        parser.add_argument(
             'SUMMARY',
             help=('Summary of the notification. Usage of \\n and \\t is possible.'))
         parser.add_argument(
@@ -201,6 +208,7 @@ class NotifySendPyCLI:
             replaces_id=args.replaces_id,
             replaces_process=args.replaces_process,
             urgency=args.urgency,
+            dontQuitOnAction=args.dontQuitOnAction
         )
         if n_id is not None:
             print(n_id)

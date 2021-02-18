@@ -68,48 +68,52 @@ Usage
 
    usage: notify-send.py [-h] [-u LEVEL] [-t TIME] [-a APP_NAME]
                          [-i ICON[,ICON...]] [-c TYPE[,TYPE...]]
-                         [--hint [TYPE:NAME:VALUE [TYPE:NAME:VALUE ...]]]
-                         [-r ID] [--replaces-process NAME]
-                         [--action [KEY:NAME [KEY:NAME ...]]]
+                         [--hint [TYPE:NAME:VALUE ...]] [-r ID]
+                         [--replaces-process NAME] [--action [KEY:NAME ...]]
+                         [--dontQuitOnAction]
                          SUMMARY [BODY]
 
    positional arguments:
-     SUMMARY               Summary of the notification. Usage of \n and \t
-                           is possible.
+     SUMMARY               Summary of the notification. Usage of \n and \t is
+                           possible.
      BODY                  Body of the notification. Usage of \n and \t is
                            possible.
-
+   
    optional arguments:
      -h, --help            show this help message and exit
      -u LEVEL, --urgency LEVEL
-                           Specifies the urgency level (low, normal,
-                           critical).
+                           Specifies the urgency level (low, normal, critical).
      -t TIME, --expire-time TIME
-                           Specifies the timeout in milliseconds at which
-                           to expire the notification.
+                           Specifies the timeout in milliseconds at which to
+                           expire the notification.
      -a APP_NAME, --app-name APP_NAME
                            Specifies the app name for the icon
      -i ICON[,ICON...], --icon ICON[,ICON...]
-                           Specifies an icon filename or stock icon to
-                           display.
+                           Specifies an icon filename or stock icon to display.
      -c TYPE[,TYPE...], --category TYPE[,TYPE...]
                            Specifies the notification category.
-     --hint [TYPE:NAME:VALUE [TYPE:NAME:VALUE ...]]
-                           Specifies basic extra data to pass. Valid types
-                           are int, double, string, boolean and byte.
+     --hint [TYPE:NAME:VALUE ...]
+                           Specifies basic extra data to pass. Valid types are
+                           int, double, string, boolean and byte.
      -r ID, --replaces-id ID
-                           Specifies the id of the notification that should
-                           be replaced.
+                           Specifies the id of the notification that should be
+                           replaced.
      --replaces-process NAME
                            Specifies the name of a notification. Every
-                           notification that gets created with the same
-                           NAME will replace every notification before it
-                           with the same NAME.
-     --action [KEY:NAME [KEY:NAME ...]]
-                           Specifies actions for the notification. The
-                           action with the key "default" will be dispatched
-                           on click of the notification. Key is the return
-                           value, name is the display-name on the button.
+                           notification that gets created with the same NAME will
+                           replace every notification before it with the same
+                           NAME.
+     --action [KEY:NAME ...]
+                           Specifies actions for the notification. The action
+                           with the key "default" will be dispatched on click of
+                           the notification. Key is the return value, name is the
+                           display-name on the button.
+     --dontQuitOnAction    Keeps running until the notification has been closed,
+                           instead of stopping after the first action was
+                           received.
+ 
+
+
 
 notify-send[.py] as root user
 =============================
