@@ -123,13 +123,20 @@ class NotifySendPy:
             # address = ('localhost', 6000)
             try:
                 with open('/tmp/notify-send.py.address', 'rb') as pidf:
-                    conn = Client(pidf.read())
+                    address = pidf.read()
+                    try:
+                        conn = Client(address)
+                    except ValueError:
+                        conn = Client(address.decode('utf8'))
                     conn.send([n, replaces_process])
                     conn.close()
             except Exception:
                 listener = Listener()
                 with open('/tmp/notify-send.py.address', 'wb') as pidf:
-                    pidf.write(listener.address)
+                    try:
+                        pidf.write(listener.address)
+                    except TypeError:
+                        pidf.write(listener.address.encode('utf8'))
                 replaces_processes = {}
                 n.show()
                 replaces_processes[replaces_process] = n.id
