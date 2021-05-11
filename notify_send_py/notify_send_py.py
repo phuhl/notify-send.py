@@ -116,7 +116,7 @@ class NotifySendPy:
         if actions:
             n.connect("closed", self.close)
             for action in actions:
-                [key, value] = action.split(':')
+                [key, value] = action.split(':', maxsplit=1)
                 n.add_action(key, value, self.action)
 
         if replaces_process:
