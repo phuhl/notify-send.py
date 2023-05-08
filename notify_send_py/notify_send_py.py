@@ -5,7 +5,7 @@ from multiprocessing.connection import Client, Listener
 
 from gi.repository import GLib
 
-from .notify3 import notify3
+from notify3 import notify3
 
 notify2 = notify3
 
@@ -22,8 +22,8 @@ class NotifySendPy:
         self.loop.quit()
 
     def action(self, n, text, maybe_params):
-        if maybe_params != None:
-            print(text + " " + str (maybe_params))
+        if maybe_params is not None:
+            print(f'{text} {str(maybe_params)}')
         else:
             print(text)
         if not self.dontQuitOnAction:
